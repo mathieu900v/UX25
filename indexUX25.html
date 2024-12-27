@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+
+  <style>
+        .letter-container {
+      display: inline-block;
+      white-space: nowrap; /* Prevent line breaks in the text */
+    }
+
+    /* Container for each line */
+    .line {
+      display: block;
+      margin-bottom: 10px; /* Add space between lines */
+    }
+
+    /* Animating each letter */
+    .letter {
+      opacity: 0;
+      display: inline-block;
+      animation: fadeIn 0.5s ease forwards;
+      font-size: 2rem; /* Adjust size if needed */
+    }
+    /* Keyframes for fade-in effect */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-3px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+  </head>
+  <body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        水五目三足耳五日足日八五八月耳一手川五一四一二目五水五二田九日五
+      </h1>
+<span class="letter-container" id="animated-text"></span>
+    </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const text = [
+        "Welcome to the UX25 Organization human-readable website",   // Line 1
+        "This whole project was not meant for humans, but you can explore it freely."
+      ];
+      
+      const container = document.getElementById('animated-text');
+      
+      if (container) {
+        // Loop through each line of text
+        text.forEach((line, lineIndex) => {
+          const lineWrapper = document.createElement('span');
+          lineWrapper.className = 'line'; // Add line class for spacing
+
+          // Split each line into individual letters
+          line.split('').forEach((letter, index) => {
+            const span = document.createElement('span');
+            span.textContent = letter === ' ' ? '\u00A0' : letter; // Replace spaces with non-breaking space
+            span.className = 'letter';
+            span.style.animationDelay = `${(lineIndex * 2.8 + index * 0.05)}s`; // Stagger animation with line delay
+            lineWrapper.appendChild(span);
+          });
+
+          container.appendChild(lineWrapper); // Add the line to the container
+        });
+      } else {
+        console.log('Container not found');
+      }
+    });
+  </script>
+  </section>
+  </body>
+</html>
