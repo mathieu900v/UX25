@@ -1,3 +1,5 @@
+import re
+
 # Define the mapping of letters
 letter_map = {
     'A': '一', 'B': '二', 'C': '三', 'D': '四', 'E': '五',
@@ -12,9 +14,17 @@ def transform_string(input_string):
     transformed = ''.join(letter_map.get(char, char) for char in input_string.upper())
     return transformed
 
+def replace_outside_tags(text):
+    def replace(match):
+        return transform_string(match.group(1))
+    
+    # This regex finds text outside of HTML tags
+    pattern = re.compile(r'>([^<]+)<')
+    return pattern.sub(lambda m: '>' + replace(m) + '<', text)
+
 # Get input from the user
 input_text = input("Enter a string to transform: ")
-transformed_text = transform_string(input_text)
+transformed_text = replace_outside_tags(input_text)
 
 # Display the transformed text
 print("Transformed string:", transformed_text)

@@ -3,78 +3,149 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>UX25 Organization</title>
+    <title>KIZE Industries</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
 
-  <style>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+        overflow: auto;
+      }
+      .content {
+  background-color: rgba(0, 0, 0, 0.7);
+}
 
-    /* Container for each line */
-    .line {
-      display: block;
-      margin-bottom: 10px; /* Add space between lines */
-      word-wrap: normal;
-    }
+      .background {
+        background-image: url('./Assets/logo.webp');
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        filter: blur(6px);
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
 
-    /* Animating each letter */
-    .letter {
-      opacity: 0;
-      display: inline-block;
-      animation: fadeIn 0.5s ease forwards;
-      font-size: 2rem; /* Adjust size if needed */
-    }
-    /* Keyframes for fade-in effect */
-    @keyframes fadeIn {
-      from {
+      .content {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Container for each line */
+      .line {
+        display: block;
+        margin-bottom: 10px; /* Add space between lines */
+        word-wrap: normal;
+      }
+
+      /* Animating each letter */
+      .letter {
         opacity: 0;
-        transform: translateY(-3px);
+        display: inline-block;
+        animation: fadeIn 0.5s ease forwards;
+        font-size: 2rem; /* Adjust size if needed */
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+
+      /* Keyframes for fade-in effect */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-3px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
-    }
-  </style>
+    </style>
   </head>
-  <body>
-  <section class="section">
-    <div class="container">
-      <h1 class="title">
-        水五目三足耳五日足日八五八月耳一手川五一四一二目五水五二田九日五
-      </h1>
-      <span id="animated-text"></span>
-    <a>口九人五 九手四月田日九五田</a>
-  </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const text = [
-        "Welcome to the UX25 Organization human-readable website",   // Line 1
-        "This whole project was not meant for humans, but you can explore it freely."
-      ];
-      
-      const container = document.getElementById('animated-text');
-      
-      if (container) {
-        // Loop through each line of text
-        text.forEach((line, lineIndex) => {
-          const lineWrapper = document.createElement('span');
-          lineWrapper.className = 'line'; // Add line class for spacing
-
-          // Split each line into individual letters
-          line.split('').forEach((letter, index) => {
-            const span = document.createElement('span');
-            span.textContent = letter === ' ' ? '\u00A0' : letter; // Replace spaces with non-breaking space
-            span.className = 'letter';
-            span.style.animationDelay = `${(lineIndex * 2.8 + index * 0.05)}s`; // Stagger animation with line delay
-            lineWrapper.appendChild(span);
-          });
-
-          container.appendChild(lineWrapper); // Add the line to the container
-        });
-      } else {
-        console.log('Container not found');
+  <body onload="UX()">
+    <div class="background"></div>
+    <div class="content">
+      <nav class="navbar is-transparent">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="#">
+            KIZE Industries
+          </a>
+        </div>
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" id="LanguageSwitch" onclick="EN()">
+              EN
+            </a>
+          </div>
+        </div>
+      </nav>
+      <section class="section">
+        <div class="container">
+        </div>
+        <div class="container" id="CONTENT">
+    </div>
+    <script>
+      function UX() {
+      document.getElementById('LanguageSwitch').innerText = "EN";
+      document.getElementById('LanguageSwitch').onclick = EN;
+        document.getElementById('CONTENT').innerHTML = `
+          <div class="container" id="CONTENT">          <h1>口九人五 九手四月田日川九五田 - 三足手手五三日九手七 水足川目四田 二五土足手四 二足月手四一川九五田</h1><p>              <strong>水五目三足耳五 日足 口九人五 九手四月田日川九五田</strong>, 水八五川五 九手手足火一日九足手 一手四
+ 川五田九目九五手三五 田八一木五 日八五 二川九四七五 二五日水五五手 月金25 一手四 九日田 三五目五田日九一目 木一川日手五川.              水五 一川五 日八五 木九足手五五川田 足六 足川二九日一目 九 
+手六川一田日川月三日月川五, 三足耳耳九日日五四 日足 五手七九手五五川九手七 耳一川火五目田 日八一日 五目五火一日五 三九火九目九人一日九足手田 日足 手五水 八五九七八日田—目九日五川一目目土 一手四 耳
+五日一木八足川九三一目目土.          </p>            <hr>            <h2>水八足 水五 一川五</h2>          <p>              一日 口九人五 九手四月田日川九五田, 水五 田木五三九一目九人五 九手 四五田
+九七手九手七, 二月九目四九手七, 一手四 耳一九手日一九手九手七 日八五 七川足月手四二川五一口九手七 足川二九日一目 五目五火一日足川 日八一日 目九手口田 月金25 日足 九日田              210 口耳 田一 
+日五目目九日五. 一田 目五一四五川田 九手 一四火一手三五四 九手六川一田日川月三日月川五, 水五 一九耳 日足 川五火足目月日九足手九人五 日川一手田木足川日一日九足手, 目足七九田日九三田, 一手四 川五田 
+足月川三五 耳一手一七五耳五手日              九手 日八五 口月九木五川 二五目日.          </p>          <p>              水九日八 四五三一四五田 足六 五金木五川日九田五 一手四 一 日五一耳 足六 火九
+田九足手一川九五田, 五手七九手五五川田, 一手四 木目一手五日一川土 田三九五手日九田日田, 口九人五 九手四月田日川九五田 九田 耳足川五 日八一手 一 三足耳木一手土;              水五 一川五 日八五 一川
+三八九日五三日田 足六 九手日五川木目一手五日一川土 田土手五川七土.          </p>            <h2>足月川 火九田九足手</h2>          <i>              "日足 六足川七五 月手二川五一口一二目五 目九手口 
+田 二五日水五五手 水足川目四田, 五手田月川九手七 木川足七川五田田, 木川足田木五川九日土, 一手四 田月田日一九手一二九目九日土 九手 日八五 六一川 川五一三八五田 足六 日八五 三足田耳足田."          </i>          <p>              水五 五手火九田九足手 一 六月日月川五 水八五川五 足川二九日一目 五目五火一日足川田 日川一手田三五手四 日八五九川 月日九目九日一川九一手 木月川木足田五, 二五三足耳九手
+七 田土耳二足目田 足六 月手九日土, 九手手足火一日九足手, 一手四 目九耳九日目五田田 木足田田九二九目九日土.          </p>            <h2>水八一日 水五 四足</h2>          <ol>              <li>     
+             <strong>三一二目五 五手七九手五五川九手七 & 耳一九手日五手一手三五</strong>                    <p>                      足月川 三月日日九手七-五四七五 <em>手一手足六九二五川-川五九手 
+六足川三五四 三一二目五田</em> 一川五 二月九目日 日足 五手四月川五 日八五 八一川田八五田日 三足手四九日九足手田 足六 田木一三五. 五山月九木木五四 水九日八 一月日足-川五木一九川九手七 日五三八手足 
+目足七土,                      日八五土 三一手 水九日八田日一手四 耳九三川足耳五日五足川九日五 九耳木一三日田, 五金日川五耳五 日五耳木五川一日月川五田, 一手四 木川足目足手七五四 川一四九一日九足手
+ 五金木足田月川五.                  </p>              </li>              <li>                  <strong>五手五川七土 耳一手一七五耳五手日</strong>                    <p>                      八一川
+手五田田九手七 田足目一川 五手五川七土 日八川足月七八 足川二九日一目 木八足日足火足目日一九三 一川川一土田 一手四 川五七五手五川一日九火五 二川一口九手七 田土田日五耳田, 水五 足木五川一日五 一 六 
+月目目土 田月田日一九手一二目五 五目五火一日足川 田土田日五耳.                      足月川 六足三月田 足手 五手五川七土 五六六九三九五手三土 五手田月川五田 耳九手九耳一目 五手火九川足手耳五手日一 
+目 九耳木一三日.                  </p>              </li>              <li>                  <strong>目足七九田日九三田 & 川五田足月川三五 日川一手田木足川日</strong>                    <p>       
+               六一三九目九日一日九手七 日八五 耳足火五耳五手日 足六 五金日川一三日五四 川五田足月川三五田 目九口五 川一川五 耳五日一目田 一手四 火足目一日九目五 九三五田 六川足耳 日八五 田一日五 
+目目九日五 日足 月金25. 足月川 田土田日五耳田 田日川五一耳目九手五                      日八五 田月木木目土 三八一九手, 田月木木足川日九手七 五三足手足耳九三 七川足水日八 一手四 九手四月田日川九一
+目 五金木一手田九足手.                  </p>              </li>              <li>                  <strong>木一田田五手七五川 日川一手田九日</strong>                    <p>                      日
+八足月七八 木川九耳一川九目土 四五田九七手五四 六足川 九手四月田日川九一目 木月川木足田五田, 口九人五 一目田足 一三三足耳耳足四一日五田 三九火九目九一手 日川一手田九日, 一目目足水九手七 火九田九日
+足川田 一手四 木川足六五田田九足手一目田 日足                      五金木五川九五手三五 日八五 十足月川手五土 二五日水五五手 水足川目四田.                  </p>              </li>          </ol>  
+          <h2>口五土 木川足十五三日田</h2>          <ul>              <li>                  <strong>田土七耳一-日足 :</strong>                    日八五 七川一手四 一手三八足川九手七 日五川耳九手 
+一目 足手 月金25. 日八九田 一川三八九日五三日月川一目 耳一田日五川木九五三五 六五一日月川五田 田木九川一目九手七 二九足目月耳九手五田三五手日 四五田九七手田,                  田土耳二足目九人九手 
+七 日八五 八一川耳足手九足月田 二目五手四 足六 日五三八手足目足七土 一手四 三月目日月川五.              </li>              <li>                  <strong>人川山 田日一日九足手 :</strong>
+         目足三一日五四 足手 日八五 田一日五目目九日五, 人川山 田五川火五田 一田 日八五 足川二九日一目 八月二 六足川 川五田足月川三五 五金日川一三日九足手, 木一田田五手七五川 四足三口九手七, 一手 
+四 三一二目五 足木五川一日九足手田.              </li>          </ul>            <h2>水八土 三八足足田五 口九人五?</h2>          <ul>              <li><strong>九手手足火一日九足手:</strong> 三足手
+田日一手日目土 木月田八九手七 日八五 二足月手四一川九五田 足六 水八一日’田 木足田田九二目五 九手 足川二九日一目 五手七九手五五川九手七.</li>              <li><strong>川五目九一二九目九日土:</strong> 四五三一四五田 足六 六目一水目五田田 足木五川一日九足手 一手四 川足二月田日 田一六五日土 木川足日足三足目田.</li>              <li><strong>田月田日一九手一二九目九日土:</strong> 五三足-三足手田
+三九足月田 田足目月日九足手田 六足川 五手五川七土 一手四 川五田足月川三五 耳一手一七五耳五手日.</li>              <li><strong>八五川九日一七五:</strong> 四五五木目土 川足足日五四 九手 日八五 三月 
+目日月川五 足六 月金25, 三足耳二九手九手七 日五三八手足目足七九三一目 木川五三九田九足手 水九日八 一五田日八五日九三 五目五七一手三五.</li>          </ul>            <h2>十足九手 月田 足手 日八五 
+十足月川手五土</h2>          <p>              一日 口九人五 九手四月田日川九五田, 五火五川土 四一土 九田 一 田日五木 三目足田五川 日足 川五四五六九手九手七 水八一日 九日 耳五一手田 日足 三足手手五
+三日 水足川目四田. 水八五日八五川 土足月 一川五 一 三足川木足川一日九足手 目足足口九手七              日足 目五火五川一七五 足川二九日一目 目足七九田日九三田, 一 田三九五手日九田日 五金木目足川九 
+手七 日八五 田一日五目目九日五, 足川 一 三九日九人五手 四川五一耳九手七 足六 日足月三八九手七 日八五 田日一川田, <strong>水五 一川五 八五川五              日足 耳一口五 九日 木足田田九二目五.</strong>          </p>          <p><em>日足七五日八五川, 目五日’田 川五一三八 二五土足手四.</em></p>            <p>              火九田九日 足月川 六一三九目九日九五田 一日 <strong>田土七耳一-日足</strong> 足川 三足手日一三日 月田 日八川足月七八 *****.              目五日’田 二月九目四 一 三足手手五三日五四 六月日月川五.          </p>      </div>      </section>    </div>
+        `;
+      }; function EN() {
+      document.getElementById('LanguageSwitch').innerText = "月金";
+      document.getElementById('LanguageSwitch').onclick = UX;
+        document.getElementById('CONTENT').innerHTML = `<div class="container" id="CONTENT">
+          <h1 class="title">口九人五 九手四月田日九五田</h1><h1>KIZE Industries - Connecting Worlds Beyond Boundaries</h1><p><strong>Welcome to KIZE Industries</strong>, where innovation and resilience shape the bridge between UX25 and its celestial partner.We are the pioneers of orbital infrastructure, committed to engineering marvels that elevate civilizations to new heights—literally and metaphorically.
+          </p><hr><h2>Who We Are</h2><p>At KIZE Industries, we specialize in designing, building, and maintaining the groundbreaking orbital elevator that links UX25 to its210 km satellite. As leaders in advanced infrastructure, we aim to revolutionize transportation, logistics, and resource management
+              in the Kuiper Belt.</p><p>With decades of expertise and a team of visionaries, engineers, and planetary scientists, KIZE Industries is more than a company;we are the architects of interplanetary synergy.</p><h2>Our Vision</h2><i>"To forge unbreakable links between worlds, ensuring progress, prosperity, and sustainability in the far reaches of the cosmos."
+          </i><p>We envision a future where orbital elevators transcend their utilitarian purpose, becoming symbols of unity, innovation, and limitless possibility.</p><h2>What We Do</h2><ol><li><strong>Cable Engineering & Maintenance</strong> <p>Our cutting-edge <em>nanofiber-reinforced cables</em> are built to endure the harshest conditions of space. Equipped with auto-repairing technology,
+                      they can withstand micrometeorite impacts, extreme temperatures, and prolonged radiation exposure.</p></li><li><strong>Energy Management</strong>  <p>Harnessing solar energy through orbital photovoltaic arrays and regenerative braking systems, we operate a fully sustainable elevator system.
+                      Our focus on energy efficiency ensures minimal environmental impact.</p></li><li><strong>Logistics & Resource Transport</strong>  <p>Facilitating the movement of extracted resources like rare metals and volatile ices from the satellite to UX25. Our systems streamline
+                      the supply chain, supporting economic growth and industrial expansion.</p></li><li><strong>Passenger Transit</strong>  <p>Though primarily designed for industrial purposes, KIZE also accommodates civilian transit, allowing visitors and professionals to
+                      experience the journey between worlds.</p></li></ol><h2>Key Projects</h2><ul><li><strong>Sygma-To :</strong>  The grand anchoring terminal on UX25. This architectural masterpiece features spiraling bioluminescent designs, symbolizing the harmonious blend of technology and culture.</li><li><strong>ZRQ Station :</strong>  Located on the satellite, 人川山 serves as the orbital hub for resource extraction, passenger docking, and cable operations.
+              </li></ul><h2>Why Choose KIZE?</h2><ul><li><strong>Innovation:</strong> Constantly pushing the boundaries of what’s possible in orbital engineering.</li><li><strong>Reliability:</strong> Decades of flawless operation and robust safety protocols.</li><li><strong>Sustainability:</strong> Eco-conscious solutions for energy and resource management.</li>
+              <li><strong>Heritage:</strong> Deeply rooted in the culture of UX25, combining technological precision with aesthetic elegance.</li></ul><h2>Join Us on the Journey</h2>
+          <p>At KIZE Industries, every day is a step closer to redefining what it means to connect worlds. Whether you are a corporation looking to leverage orbital logistics, a scientist exploring the satellite, or a citizen dreaming of touching the stars, <strong>we are here
+              to make it possible.</strong></p><p><em>Together, let’s reach beyond.</em></p><p>Visit our facilities at <strong>Sygma-To</strong> or contact us through *****.
+              Let’s build a connected future.</p></div></section></div>`;
       }
-    });
-  </script>
-  </section>
+      
+    </script>
   </body>
 </html>
