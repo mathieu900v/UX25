@@ -15,8 +15,8 @@
         overflow: auto;
       }
       .content {
-  background-color: rgba(0, 0, 0, 0.7);
-}
+        background-color: rgba(0, 0, 0, 0.7);
+      }
 
       .background {
         background-image: url('./Assets/logo.webp');
@@ -37,22 +37,6 @@
         z-index: 1;
       }
 
-      /* Container for each line */
-      .line {
-        display: block;
-        margin-bottom: 10px; /* Add space between lines */
-        word-wrap: normal;
-      }
-
-      /* Animating each letter */
-      .letter {
-        opacity: 0;
-        display: inline-block;
-        animation: fadeIn 0.5s ease forwards;
-        font-size: 2rem; /* Adjust size if needed */
-      }
-
-      /* Keyframes for fade-in effect */
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -63,16 +47,46 @@
           transform: translateY(0);
         }
       }
+
+      #menu-switch {
+        display: none;
+      }
+      #menu-switch:checked + .navbar-brand .navbar-burger span:nth-child(1) {
+        transform: translateY(0px) rotate(45deg);
+      }
+      #menu-switch:checked + .navbar-brand .navbar-burger span:nth-child(2) {
+        opacity: 0;
+      }
+      #menu-switch:checked + .navbar-brand .navbar-burger span:nth-child(3) {
+        transform: translateY(6px) rotate(-45deg);
+      }
+      #menu-switch:checked ~ .navbar-menu {
+        display: block;
+      }
+      .navbar-menu {
+        display: none;
+      }
+      @media (min-width: 1024px) {
+        .navbar-menu {
+          display: flex !important;
+        }
+      }
     </style>
   </head>
   <body onload="EN()">
     <div class="background"></div>
     <div class="content">
       <nav class="navbar is-transparent">
+        <input id="menu-switch" name="menu-switch" type="checkbox"/>
         <div class="navbar-brand">
           <a class="navbar-item" href="#">
             KIZE Industries
           </a>
+          <label for="menu-switch" class="navbar-burger" role="button" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </label>
         </div>
         <div class="navbar-menu">
           <div class="navbar-start">
@@ -81,7 +95,7 @@
             </a>
             <a class="navbar-item" href="./operations.html">
               Infrastructure Availability
-              </a>
+            </a>
           </div>
         </div>
       </nav>
@@ -89,6 +103,8 @@
         <div class="container">
         </div>
         <div class="container" id="CONTENT">
+        </div>
+      </section>
     </div>
     <script>
       function UX() {
@@ -147,7 +163,7 @@
           <p>At KIZE Industries, every day is a step closer to redefining what it means to connect worlds. Whether you are a corporation looking to leverage orbital logistics, a scientist exploring the satellite, or a citizen dreaming of touching the stars, <strong>we are here
               to make it possible.</strong></p><p><em>Together, let’s reach beyond.</em></p><p>Visit our facilities at <strong>Sygma-To</strong> or contact us through *****.
               Let’s build a connected future.</p></div></section></div>`;
-      }
+      };
       
     </script>
   </body>
