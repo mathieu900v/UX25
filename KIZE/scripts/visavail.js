@@ -56,9 +56,9 @@
 				left: -100
 			},
 			// year ticks to be emphasized or not
-			emphasize_year_ticks: true,
-			emphasize_month_ticks: true,
-			ticks_for_graph: 6,
+			emphasize_year_ticks: false,
+			emphasize_month_ticks: false,
+			ticks_for_graph: 9,
 			// define chart pagination
 			// max. no. of datasets that is displayed, 0: all
 			max_display_datasets: 0,
@@ -134,11 +134,11 @@
 			// title of chart is drawn or not (default: true)
 			title: {
 				enabled: true,
-				text: 'Data Availability Plot',
+				text: 'KIZE Infrastructure Availability',
 				line_spacing: 16
 			},
 			sub_title: {
-				enabled: true,
+				enabled: false,
 				from_text: 'from',
 				to_text: 'to',
 				line_spacing: 16
@@ -154,11 +154,6 @@
 					height:7,
 					line_spacing: 7
 				}
-			},
-			//custom icon call (for example font awesome)
-			icon:{
-				class_has_data : 'fas fa-fw fa-check',
-				class_has_no_data: 'fas fa-fw fa-times'
 			},
 			zoom: {
 				enabled: false,
@@ -388,25 +383,27 @@
 				var format = d3.timeParse("%Y-%m-%d");
 				var format_utc_time = d3.utcParse("%Y-%m-%d %H:%M:%S");
 				var format_utc= d3.utcParse("%Y-%m-%d");
+				var format_year = d3.timeParse("%Y");
 
 				if (options.date_in_utc) {
 					var parseDate = function(date) {
-						return format_utc(date);
+						return format_utc(date) || format_year(date);
 					};
 					var parseDateTime = function(date) {
-						return format_utc_time(date);
+						return format_utc_time(date) || format_year(date);
 					};
 				} else {
 					var parseDate = function(date) {
-						return format(date);
+						return format(date) || format_year(date);
 					};
 					var parseDateTime = function(date) {
-						return new Date(date);
+						return new Date(date) || format_year(date);
 					};
 				}
 				
 				var parseDateRegEx = new RegExp(/^\d{4}-\d{2}-\d{2}$/);
 				var parseDateTimeRegEx = new RegExp(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
+				var parseYearRegEx = new RegExp(/^\d{4}$/);
 				
 				var t0 = performance.now()
 				dataset.forEach(function (d) {
@@ -420,9 +417,10 @@
 							} else if (parseDateRegEx.test(d1[0])) {
 								// d1[0] is date without time data
 								d1[0] = parseDate(d1[0]);
+							} else if (parseYearRegEx.test(d1[0])) {
+								d1[0] = format_year(d1[0]);
 							} else {
-								throw new Error('Date/time format not recognized. Pick between \'YYYY-MM-DD\' or ' +
-									'\'YYYY-MM-DD HH:MM:SS\'.');
+								throw new Error('Date/time format not recognized. Pick between \'YYYY-MM-DD\', \'YYYY-MM-DD HH:MM:SS\', or \'YYYY\'.');
 							}
 						}
 						if (!(d1[2] instanceof Date)) {
@@ -436,11 +434,12 @@
 									} else if (parseDateRegEx.test(d1[2])) {
 										// d1[2] is date without time data
 										d1[2] = parseDate(d1[2]);
+									} else if (parseYearRegEx.test(d1[2])) {
+										d1[2] = format_year(d1[2]);
 									} else {
 										d1[2] = d1[0];
 										if(options.graph.type != "rhombus")
-											console.error('Date/time format not recognized. Pick between \'YYYY-MM-DD\' or ' +
-											'\'YYYY-MM-DD HH:MM:SS\'.');
+											console.error('Date/time format not recognized. Pick between \'YYYY-MM-DD\', \'YYYY-MM-DD HH:MM:SS\', or \'YYYY\'.');
 									}
 								} else
 									throw new Error('Defined block true but dataset not correct');
@@ -1162,29 +1161,31 @@
 									output += ' ' + series.description[i] + ' ';
 								}
 							}
-							
+
+							var formatDate = function(date) {
+								return moment(date).format('YYYY');
+							};
+
 							if (options.is_date_only_format && !options.tooltip.date_plus_time) {
 								if (d[2] > d3.timeSecond.offset(d[0], 86400) && !options.tooltip.only_first_date) {
-									if(options.date_is_descending)
-										return output + moment(d[2]).format('l') +
-										' - ' + moment(d[0]).format('l');
-									return output + moment(d[0]).format('l') +
-										' - ' + moment(d[2]).format('l');
+									if (options.date_is_descending)
+										return output + formatDate(d[2]) + ' - ' + formatDate(d[0]);
+									return output + formatDate(d[0]) + ' - ' + formatDate(d[2]);
 								}
-								if(options.date_is_descending)
-									return output + moment(d[2]).format('l');
-								return output + moment(d[0]).format('l');
+								if (options.date_is_descending)
+									return output + formatDate(d[2]);
+								return output + formatDate(d[0]);
 							} else {
 								if(!options.tooltip.only_first_date){
 									if ((d[2] > d3.timeSecond.offset(d[0], 86400) || options.tooltip.date_plus_time)) {
 										if(options.date_is_descending)
-											return output + moment(d[2]).format('l') + ' ' +
+											return output + formatDate(d[2]) + ' ' +
 												moment(d[2]).format('LTS') + ' - ' +
-												moment(d[0]).format('l') + ' ' +
+												formatDate(d[0]) + ' ' +
 												moment(d[0]).format('LTS');
-										return output + moment(d[0]).format('l') + ' ' +
+										return output + formatDate(d[0]) + ' ' +
 											moment(d[0]).format('LTS') + ' - ' +
-											moment(d[2]).format('l') + ' ' +
+											formatDate(d[2]) + ' ' +
 											moment(d[2]).format('LTS');
 									}
 									if(options.date_is_descending)
@@ -1195,9 +1196,9 @@
 								} else {
 									if (d[2] > d3.timeSecond.offset(d[0], 86400) || options.tooltip.date_plus_time) {
 										if(options.date_is_descending)
-											return output + moment(d[2]).format('l') + ' ' +
+											return output + formatDate(d[2]) + ' ' +
 												moment(d[2]).format('LTS');
-										return output + moment(d[0]).format('l') + ' ' +
+										return output + formatDate(d[0]) + ' ' +
 											moment(d[0]).format('LTS');
 									}
 									if(options.date_is_descending)

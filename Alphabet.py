@@ -15,6 +15,9 @@ def transform_string(input_string):
     return transformed
 
 def replace_outside_tags(text):
+    if '<' not in text and '>' not in text:
+        return transform_string(text)
+    
     def replace(match):
         return transform_string(match.group(1))
     
