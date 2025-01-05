@@ -34,16 +34,13 @@
         {
             "imports": {
                 "three": "https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.module.js",
-                "GLTFLoader": "https://cdn.jsdelivr.net/npm/three@0.146.0/examples/jsm/loaders/GLTFLoader.js",
-                "DragControls": "https://cdn.jsdelivr.net/npm/three@0.146.0/examples/jsm/controls/DragControls.js"
-            }
+                "GLTFLoader": "https://cdn.jsdelivr.net/npm/three@0.146.0/examples/jsm/loaders/GLTFLoader.js"            }
         }
     </script>
     <script type="module">
         import * as THREE from 'three';
         import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.18.0/dist/cannon-es.js';
         import { GLTFLoader } from 'GLTFLoader';
-        import * as DRAGCONTROLS from 'DragControls';
 
         // Create the scene, camera, and renderer
         const scene = new THREE.Scene();
@@ -60,7 +57,7 @@
 
         // Initialize physics world
         const world = new CANNON.World();
-        world.gravity.set(0, -9.82, 0);
+        world.gravity.set(0, -4, 0);
 
         // Create a material with lower restitution and friction
         const material = new CANNON.Material('lowBounce');
@@ -71,7 +68,7 @@
         world.addContactMaterial(contactMaterial);
 
         // Create torus geometries, materials, and physics bodies
-        const geometry = new THREE.TorusGeometry(2, 1, 40, 300);
+        const geometry = new THREE.TorusGeometry(1, 0.5, 40, 80);
         const material1 = new THREE.MeshStandardMaterial({ color: 0x9540d6 });
         const material2 = new THREE.MeshStandardMaterial({ color: 0xa1ffff });
 
@@ -82,25 +79,15 @@
         // Load GLB model
         const gltfLoader = new GLTFLoader();
         const draggableObjects = [];
+        let model; // Declare model variable outside the loader
+
         gltfLoader.load('https://UX25.org/KFXT/gumBox.glb', function(gltf) {
-            const model = gltf.scene;
+            model = gltf.scene;
             model.position.set(40, 38, 0); // Set the coordinates here
             model.scale.set(12, 12, 12); // Adjust the scale here
             model.rotation.set(20 * (Math.PI / 180), 10 * (Math.PI / 180), 160 * (Math.PI / 180)); // Adjust the rotation here
             scene.add(model);
             draggableObjects.push(...model.children); // Add the meshes to the draggableObjects array
-            const dragControls = new DRAGCONTROLS.DragControls(draggableObjects, camera, renderer.domElement);
-
-            // Add event listener for drag events
-            dragControls.addEventListener('drag', function(event) {
-                const draggedObject = event.object;
-                draggableObjects.forEach(mesh => {
-                    if (mesh !== draggedObject) {
-                        // Update the position of the other meshes to match the dragged mesh's position
-                        mesh.position.copy(draggedObject.position);
-                    }
-                });
-            });
         }, undefined, function(error) {
             console.error(error);
         });
@@ -112,10 +99,10 @@
         function createTorus() {
             const threeMaterial = Math.random() > 0.5 ? material1 : material2;
             const torus = new THREE.Mesh(geometry, threeMaterial);
-            torus.position.set(getRandom(30, 35), getRandom(20, 24), getRandom(-3, -5)); // Higher position
+            torus.position.set(getRandom(30, 35), getRandom(20, 21), getRandom(-2, -5)); // Higher position
             scene.add(torus);
 
-            const shape = new CANNON.Sphere(1); // Approximate torus with a sphere for simplicity
+            const shape = new CANNON.Sphere(0.6); // Approximate torus with a sphere for simplicity
             const body = new CANNON.Body({
                 mass: 0.00000008,
                 position: new CANNON.Vec3(torus.position.x, torus.position.y, torus.position.z),
@@ -130,15 +117,15 @@
         }
 
         // Create 30 torus meshes with random positions and materials
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 80; i++) {
             createTorus();
         }
 
         // Add lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(1, 1, 40).normalize();
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(15, 12, 40).normalize();
         scene.add(directionalLight);
 
         camera.position.z = 50;
@@ -152,25 +139,54 @@
 
         // Create a raycaster
         const raycaster = new THREE.Raycaster();
+        const attractionStrength = 0.000007;
 
-        // Ensure DRAGCONTROLS is defined before using it
-        if (typeof DRAGCONTROLS === 'function') {
-            const dragControls = new DRAGCONTROLS(draggableObjects, camera, renderer.domElement);
+        let time = 0;
 
-            dragControls.addEventListener('dragstart', function (event) {
-                controls.enabled = false;
-            });
+        // Function to shake the model
+        function shakeModel() {
+            if (model) {
+                model.position.y += Math.sin(time * 20) * 0.1;
+            }
+        }
 
-            dragControls.addEventListener('dragend', function (event) {
-                controls.enabled = true;
-            });
-        } else {
-            console.error('DRAGCONTROLS is not defined or not a constructor');
+        // Function to attract toruses to the mouse
+        function attractToruses() {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children, true);
+
+            if (intersects.length > 0) {
+                const point = intersects[0].point;
+
+                for (let i = 0; i < bodies.length; i++) {
+                    const body = bodies[i];
+                    const direction = new CANNON.Vec3(point.x - body.position.x, point.y - body.position.y, point.z - body.position.z);
+                    direction.normalize();
+                    direction.scale(attractionStrength, direction);
+                    body.applyForce(direction, body.position);
+                    body.angularDamping = 1.0;
+                    // Apply damping to slow down the toruses
+                    body.velocity.scale(1, body.velocity);
+
+                    // Apply angular damping to reduce spinning
+                    body.angularVelocity.set(0, 0, 0);
+                    body.quaternion.set(0, 0, 0, 1);
+                }
+            }
         }
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
+
+            // Increment time
+            time += 0.01;
+
+            // Shake the model
+            shakeModel();
+
+            // Attract toruses to the mouse
+            attractToruses();
 
             // Update physics world
             world.step(1 / 60);
@@ -180,8 +196,8 @@
                 toruses[i].position.copy(bodies[i].position);
                 toruses[i].quaternion.copy(bodies[i].quaternion);
 
-                // Check if the torus has fallen below z = -40
-                if (bodies[i].position.y < -40) {
+                // Check if the torus has fallen below y = -40
+                if (bodies[i].position.y < -60 || bodies[i].position.y > 60 || bodies[i].position.x < -90 || bodies[i].position.x > 90 || bodies[i].position.z < -60 || bodies[i].position.z > 45) {
                     // Remove the old torus and body
                     scene.remove(toruses[i]);
                     world.removeBody(bodies[i]);
