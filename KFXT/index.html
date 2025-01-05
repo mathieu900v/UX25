@@ -5,20 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Draggable GLB Model</title>
     <style>
+        @font-face {
+        font-family: 'Blockstepped';
+        src: url('./Blockstepped.ttf') format('truetype');
+        }
+        @font-face {
+        font-family: 'Blockstepped3D';
+        src: url('./Blockstepped 3D.ttf') format('truetype');
+        }
+        h1 {
+            font-family: 'Blockstepped3D', sans-serif;
+            -webkit-text-stroke: 0.2px #8b00c6; /* For WebKit browsers */
+            text-shadow: 
+            0.2px 0.2px 0 #8b00c6, 
+                -0.2px -0.2px 0 #8b00c6, 
+                0.2px -0.2px 0 #8b00c6, 
+                -0.2px 0.2px 0 #8b00c6; /* For other browsers */
+            font-size: 2.5em;
+        }
+        p {
+            font-family: 'Blockstepped3D', sans-serif;
+            font-size: 1.5em;
+        }
+        /* Media query for mobile screens */
+        @media (max-width: 1200px) {
+        h1 {
+            font-size: 1em;
+        }
+        p {
+            font-size: 0.75em;
+        }
+        #info {
+            left: 5%;
+            width: 35%;
+        }
+        #info2 {
+            right: 5%;
+            width: 35%;
+        }
+        }
         body {
             margin: 0;
             overflow: hidden;
+            -webkit-text-stroke: 0.2px white; /* For WebKit browsers */
+            text-shadow: 
+            0.2px 0.2px 0 #fff, 
+                -0.2px -0.2px 0 #fff, 
+                0.2px -0.2px 0 #fff, 
+                -0.2px 0.2px 0 #fff; /* For other browsers */
         }
         canvas {
             display: block;
         }
         #info {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 50vw;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            top: 5%;
+            left: 15%;
+            width: 25%;
+            background-color: rgba(0, 0, 0, 0.3);
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #info2 {
+            position: absolute;
+            bottom: 10%;
+            right: 15%;
+            width: 25%;
+            background-color: rgba(0, 0, 0, 0.3);
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #footer {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 5%;
+            background-color: rgba(0, 0, 0, 0.3);
             color: white;
             padding: 20px;
             box-sizing: border-box;
@@ -27,8 +92,14 @@
 </head>
 <body>
     <div id="info">
-        <h1>Information</h1>
-        <p>This is a rotating chewing gum simulation.</p>
+        <h1>口六金日</h1>
+        <h1>Fuel for your mind,<br/>Fuel for your body.</h1>
+    </div>
+    <div id="info2">
+        <p>Whether you’re working in the orbital elevator, exploring icy caves, or enjoying your leisure time under the stars, 口六金日 gums ensure you stay energized for 14 hours straight.</p>
+    </div>
+    <div id="footer">
+        <p>©</p>
     </div>
     <script type="importmap">
         {
@@ -50,10 +121,10 @@
         document.body.appendChild(renderer.domElement);
 
         // Load background texture
-        // const loader = new THREE.TextureLoader();
-        // loader.load('https://UX25.org/KFXT/bg.webp', function(texture) {
-        //     scene.background = texture;
-        // });
+        const loader = new THREE.TextureLoader();
+        loader.load('https://UX25.org/KFXT/bg.webp', function(texture) {
+            scene.background = texture;
+        });
 
         // Initialize physics world
         const world = new CANNON.World();
@@ -69,8 +140,13 @@
 
         // Create torus geometries, materials, and physics bodies
         const geometry = new THREE.TorusGeometry(1, 0.5, 40, 80);
-        const material1 = new THREE.MeshStandardMaterial({ color: 0x9540d6 });
-        const material2 = new THREE.MeshStandardMaterial({ color: 0xa1ffff });
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('https://ux25.org/KFXT/GumText.webp');
+        const texture2 = textureLoader.load('https://ux25.org/KFXT/GumText2.webp');
+
+        // Create materials using the texture
+        const material1 = new THREE.MeshStandardMaterial({ map: texture });
+        const material2 = new THREE.MeshStandardMaterial({ map: texture2 });
 
         // Function to get a random number within a range
         function getRandom(min, max) {
