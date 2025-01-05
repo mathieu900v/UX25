@@ -25,9 +25,16 @@ def replace_outside_tags(text):
     pattern = re.compile(r'>([^<]+)<')
     return pattern.sub(lambda m: '>' + replace(m) + '<', text)
 
-# Get input from the user
-input_text = input("Enter a string to transform: ")
-transformed_text = replace_outside_tags(input_text)
+# Get multi-line input from the user
+print("Enter a string to transform (end with an empty line):")
+input_lines = []
+while True:
+    line = input()
+    if line == "":
+        break
+    input_lines.append(line)
 
-# Display the transformed text
-print("Transformed string:", transformed_text)
+input_text = "\n".join(input_lines)
+transformed_text = replace_outside_tags(input_text)
+print("Transformed text:")
+print(transformed_text)
