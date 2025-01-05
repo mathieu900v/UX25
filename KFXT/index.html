@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draggable GLB Model</title>
+    <title>口六金日 七月耳田</title>
     <style>
         @font-face {
         font-family: 'Blockstepped';
@@ -26,6 +26,21 @@
         p {
             font-family: 'Blockstepped3D', sans-serif;
             font-size: 1.5em;
+        }
+        h3 {
+        font-family: 'Blockstepped', sans-serif;
+        font-size: 5em;
+        color: #fff;
+        animation: zoom 1s infinite;
+        }
+        @keyframes zoom {
+            0%, 100% {
+                transform: scale(1) rotate(-20deg);
+            }
+            50% {
+                transform: scale(1.1) rotate(-10deg);
+        }
+            }
         }
         body {
             margin: 0;
@@ -60,6 +75,16 @@
             padding: 20px;
             box-sizing: border-box;
         }
+        #price {
+            position: absolute;
+            bottom: 35%;
+            left: 18%;
+            width: 40%;
+            height: 10%;
+            background-color: rgba(0, 0, 0, 0);
+            padding: 20px;
+            box-sizing: border-box;
+        }
         #footer {
             position: absolute;
             bottom: 0;
@@ -81,11 +106,20 @@
         }
         #info {
             left: 5%;
-            width: 60%;
+            width: 50%;
         }
         #info2 {
             right: 5%;
-            width: 60%;
+            width: 50%;
+        }
+        #price {
+            bottom: 20%;
+            left: 10%;
+            width: 40%;
+            height: 10%;
+        }
+        h3 {
+            font-size: 2em;
         }
         }
     </style>
@@ -97,6 +131,9 @@
     </div>
     <div id="info2">
         <p>Whether you’re working in the orbital elevator, exploring icy caves, or enjoying your leisure time under the stars, 口六金日 gums ensure you stay energized for 14 hours straight.</p>
+    </div>
+    <div id="price">
+        <h3>!299人</h3>
     </div>
     <div id="footer">
         <p>©</p>
