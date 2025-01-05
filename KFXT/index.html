@@ -83,7 +83,7 @@
 
         gltfLoader.load('https://UX25.org/KFXT/gumBox.glb', function(gltf) {
             model = gltf.scene;
-            model.position.set(40, 38, 0); // Set the coordinates here
+            model.position.set(20, 38, 0); // Set the coordinates here
             model.scale.set(12, 12, 12); // Adjust the scale here
             model.rotation.set(20 * (Math.PI / 180), 10 * (Math.PI / 180), 160 * (Math.PI / 180)); // Adjust the rotation here
             scene.add(model);
@@ -99,7 +99,7 @@
         function createTorus() {
             const threeMaterial = Math.random() > 0.5 ? material1 : material2;
             const torus = new THREE.Mesh(geometry, threeMaterial);
-            torus.position.set(getRandom(30, 35), getRandom(20, 21), getRandom(-2, -5)); // Higher position
+            torus.position.set(getRandom(10, 15), getRandom(20, 21), getRandom(-2, -5)); // Higher position
             scene.add(torus);
 
             const shape = new CANNON.Sphere(0.6); // Approximate torus with a sphere for simplicity
