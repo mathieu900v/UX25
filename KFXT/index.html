@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotating Chewing Gum</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50vw;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>Information</h1>
+        <p>This is a rotating chewing gum simulation.</p>
+    </div>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+
+        // Create the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Load background texture
+        const loader = new THREE.TextureLoader();
+        loader.load('./bg.webp', function(texture) {
+            scene.background = texture;
+        });
+
+        // Create torus geometries and materials
+        const geometry = new THREE.TorusGeometry(2, 1, 40, 300);
+        const material1 = new THREE.MeshStandardMaterial({ color: 0x9540d6 });
+        const material2 = new THREE.MeshStandardMaterial({ color: 0xa1ffff });
+
+        // Function to get a random number within a range
+        function getRandom(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // Create 30 torus meshes with random positions and materials
+        const toruses = [];
+        const gravities = [];
+        const rotationSpeedsX = [];
+        const rotationSpeedsY = [];
+        const horizontalSpeeds = [];
+        function createTorus() {
+            const material = Math.random() > 0.5 ? material1 : material2;
+            const torus = new THREE.Mesh(geometry, material);
+            torus.position.x = getRandom(12, 20);
+            torus.position.y = getRandom(40, 45);
+            torus.position.z = getRandom(-5, 14);
+            toruses.push(torus);
+            gravities.push(getRandom(0.1, 0.5)); // Assign a random gravity value
+            rotationSpeedsX.push(getRandom(0.001, 0.01)); // Assign a random rotation speed for x
+            rotationSpeedsY.push(getRandom(0.001, 0.01)); // Assign a random rotation speed for y
+            horizontalSpeeds.push(getRandom(-0.05, 0.05)); // Assign a random horizontal speed
+            scene.add(torus);
+        }
+
+        for (let i = 0; i < 30; i++) {
+            createTorus();
+        }
+
+        // Add lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(1, 1, 1).normalize();
+        scene.add(directionalLight);
+
+        camera.position.z = 50;
+
+        // Track mouse position
+        const mouse = new THREE.Vector2();
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        // Create a raycaster
+        const raycaster = new THREE.Raycaster();
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update the raycaster with the mouse position
+            raycaster.setFromCamera(mouse, camera);
+
+            // Apply gravity, horizontal movement, and repelling force to the toruses
+            for (let i = toruses.length - 1; i >= 0; i--) {
+                const torus = toruses[i];
+
+                // Calculate the repelling force
+                const intersects = raycaster.intersectObject(torus);
+                if (intersects.length > 0) {
+                    const intersectPoint = intersects[0].point;
+                    const distance = torus.position.distanceTo(intersectPoint);
+
+                    if (distance < 1000) { // Increase the repelling radius
+                        const repellingForce = 1;
+                        const direction = torus.position.clone().sub(intersectPoint).normalize();
+                        torus.position.add(direction.multiplyScalar(repellingForce));
+                    }
+                }
+
+                torus.position.y -= gravities[i]; // Use the assigned gravity value
+                torus.position.x += horizontalSpeeds[i]; // Use the assigned horizontal speed
+                if (torus.position.y < -40) {
+                    scene.remove(torus); // Remove the torus from the scene
+                    toruses.splice(i, 1); // Remove the torus from the array
+                    gravities.splice(i, 1); // Remove the gravity value from the array
+                    rotationSpeedsX.splice(i, 1); // Remove the rotation speed for x from the array
+                    rotationSpeedsY.splice(i, 1); // Remove the rotation speed for y from the array
+                    horizontalSpeeds.splice(i, 1); // Remove the horizontal speed from the array
+                    createTorus(); // Create a new torus
+                }
+                torus.rotation.x += rotationSpeedsX[i]; // Use the assigned rotation speed for x
+                torus.rotation.y += rotationSpeedsY[i]; // Use the assigned rotation speed for y
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
